@@ -133,3 +133,5 @@ dmypy.json
 /.jupyter/
 /.local/
 /.idea/
+.DS_Store
+/.config/
