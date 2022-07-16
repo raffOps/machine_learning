@@ -1,0 +1,26 @@
+price,lug boot,safety,target
+low,med,med,acc
+low,med,high,acc
+low,small,med,acc
+med,small,med,acc
+med,big,high,acc
+high,small,high,acc
+low,big,high,acc
+high,med,med,acc
+med,med,med,acc
+med,big,med,acc
+low,big,med,unacc
+high,big,high,unacc
+low,small,med,unacc
+med,med,high,unacc
+med,big,low,unacc
+low,med,low,unacc
+low,small,low,unacc
+med,med,med,unacc
+med,med,low,unacc
+med,small,low,unacc
+med,big,med,unacc
+high,big,med,unacc
+high,big,low,unacc
+high,small,low,unacc
+high,small,med,unacc
