@@ -1,0 +1,11 @@
+.cache
+.config
+.ipynb_checkpoints
+.ipython
+.jupyter
+.local
+.dockerignore
+.gitignore
+*.pdf
+conda_environment.yml
+Dockerfile
