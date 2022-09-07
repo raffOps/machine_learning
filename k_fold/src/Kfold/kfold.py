@@ -22,14 +22,14 @@ class Kfold:
         splits = ((tuple(folds_for_training), fold_for_test) for folds_for_training, fold_for_test in splits)
         return splits
     
-    def generate_folds(self, values: list[tuple[list[int], int]]) -> set[tuple[int]]:
-        indexes_with_false_label = [index for index, value in enumerate(values) if value[1] == 0]
-        indexes_with_true_label = [index for index, value in enumerate(values) if value[1] == 1]
+    def generate_folds(self, y_values: list[int]) -> set[tuple[int]]:
+        indexes_with_false_label = [index for index, value in enumerate(y_values) if value == 0]
+        indexes_with_true_label = [index for index, value in enumerate(y_values) if value == 1]
         if self.shuffle:
             random.shuffle(indexes_with_false_label)
             random.shuffle(indexes_with_true_label)
         folds = [[] for _ in range(self.k)]
-        for _ in range(int(len(values) / self.k)):
+        for _ in range(int(len(y_values) / self.k)):
             try:
                 for fold in folds:
                     index_false_label = indexes_with_false_label.pop(0)
@@ -40,13 +40,9 @@ class Kfold:
 
         return set([tuple(fold) for fold in folds])
 
+#    def split(self, X, y):
+
+
 
 if __name__ == "__main__":
-    for index in [3, 5, 8]:
-        kfold = Kfold(index)
-        with open("../../tests/mocks/test_values", "rb") as file:
-            values = pickle.load(file)
-
-        folds = kfold.generate_folds(values)
-        with open(f"../../tests/mocks/values_splitted_in_{index}_folds", "wb") as file:
-            pickle.dump(folds, file)
+    kfold = Kfold(3)

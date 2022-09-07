@@ -29,6 +29,20 @@ def values():
 
 
 @pytest.fixture
+def X_values():
+    with open("mocks/test_values", "rb") as file:
+        values = pickle.load(file)
+    return [value[0] for value in values]
+
+
+@pytest.fixture
+def y_values():
+    with open("mocks/test_values", "rb") as file:
+        values = pickle.load(file)
+    return [value[1] for value in values]
+
+
+@pytest.fixture
 def values_splitted_in_3_folds():
     with open("mocks/values_splitted_in_3_folds", "rb") as file:
         values = pickle.load(file)
@@ -83,70 +97,65 @@ def test_generate_split_with_k_equal_8(kfold_k_equal_8):
     }
 
 
-def test_generate_folds_with_k_equal_3(kfold_k_equal_3, values, values_splitted_in_3_folds):
-    folds = kfold_k_equal_3.generate_folds(values)
+def test_generate_folds_with_k_equal_3(kfold_k_equal_3, y_values, values_splitted_in_3_folds):
+    folds = kfold_k_equal_3.generate_folds(y_values)
     assert folds == values_splitted_in_3_folds
 
 
-def test_generate_folds_with_k_equal_3(kfold_k_equal_3, values, values_splitted_in_3_folds):
-    folds = kfold_k_equal_3.generate_folds(values)
-    assert folds == values_splitted_in_3_folds
-
-
-def test_generate_folds_with_k_equal_5(kfold_k_equal_5, values, values_splitted_in_5_folds):
-    folds = kfold_k_equal_5.generate_folds(values)
+def test_generate_folds_with_k_equal_5(kfold_k_equal_5, y_values, values_splitted_in_5_folds):
+    folds = kfold_k_equal_5.generate_folds(y_values)
     assert folds == values_splitted_in_5_folds
     
     
-def test_generate_folds_with_k_equal_8(kfold_k_equal_8, values, values_splitted_in_8_folds):
-    folds = kfold_k_equal_8.generate_folds(values)
+def test_generate_folds_with_k_equal_8(kfold_k_equal_8, y_values, values_splitted_in_8_folds):
+    folds = kfold_k_equal_8.generate_folds(y_values)
     assert folds == values_splitted_in_8_folds
 
 
-def test_totally_disjointed_3_folds(values_splitted_in_3_folds):
+def test_totally_disjointed_3_folds(kfold_k_equal_3, y_values):
     joined_folds = []
-    for fold in values_splitted_in_3_folds:
-        joined_folds.extend(fold)
-
-    assert len(joined_folds) == len(set(joined_folds))
-    
-    
-def test_totally_disjointed_5_folds(values_splitted_in_5_folds):
-    joined_folds = []
-    for fold in values_splitted_in_5_folds:
-        joined_folds.extend(fold)
-
-    assert len(joined_folds) == len(set(joined_folds))
-    
-    
-def test_totally_disjointed_8_folds(values_splitted_in_8_folds):
-    joined_folds = []
-    for fold in values_splitted_in_8_folds:
+    for fold in kfold_k_equal_3.generate_folds(y_values):
         joined_folds.extend(fold)
 
     assert len(joined_folds) == len(set(joined_folds))
 
 
-def test_balanced_3_folds(values_splitted_in_3_folds, values):
-    for fold in values_splitted_in_3_folds:
+def test_totally_disjointed_5_folds(kfold_k_equal_5, y_values):
+    joined_folds = []
+    for fold in kfold_k_equal_5.generate_folds(y_values):
+        joined_folds.extend(fold)
+
+    assert len(joined_folds) == len(set(joined_folds))
+
+
+def test_totally_disjointed_8_folds(kfold_k_equal_8, y_values):
+    joined_folds = []
+    for fold in kfold_k_equal_8.generate_folds(y_values):
+        joined_folds.extend(fold)
+
+    assert len(joined_folds) == len(set(joined_folds))
+
+
+def test_balanced_3_folds(kfold_k_equal_3, values, y_values):
+    for fold in kfold_k_equal_3.generate_folds(y_values):
         assert np.asarray([row[1] for index, row
                            in enumerate(values)
                            if index in fold]
                           ).mean() \
                == 0.5
-     
-        
-def test_balanced_5_folds(values_splitted_in_5_folds, values):
-    for fold in values_splitted_in_5_folds:
+
+
+def test_balanced_5_folds(kfold_k_equal_5, values, y_values):
+    for fold in kfold_k_equal_5.generate_folds(y_values):
         assert np.asarray([row[1] for index, row
                            in enumerate(values)
                            if index in fold]
                           ).mean() \
                == 0.5
-  
-        
-def test_balanced_8_folds(values_splitted_in_8_folds, values):
-    for fold in values_splitted_in_8_folds:
+
+
+def test_balanced_8_folds(kfold_k_equal_8, values, y_values):
+    for fold in kfold_k_equal_8.generate_folds(y_values):
         assert np.asarray([row[1] for index, row
                            in enumerate(values)
                            if index in fold]
