@@ -53,6 +53,8 @@ class Kfold:
             for train_index in train_indexes_folds:
                 x_train.extend(x.take(folds[train_index], axis=0))
                 y_train.extend(y.take(folds[train_index], axis=0))
+            x_train = np.vstack(x_train)
+            y_train = np.asarray(y_train)
             x_test = x.take(folds[test_index_fold], axis=0)
             y_test = y.take(folds[test_index_fold], axis=0)
 
