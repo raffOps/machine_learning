@@ -23,29 +23,27 @@ def get_models() -> list[tuple[Any, str, dict[str, Any]]]:
             RandomForestClassifier,
             "random_forest",
             {
-                "n_estimators": [50, 100, 200, 300, 500],
+                "n_estimators": [50, 100, 200, 300],
                 "criterion": ["gini", "entropy", "log_loss"],
-                "max_features": ["sqrt", "log2", 0.2, None]
             }
         ),
-        (
-            LogisticRegression,
-            "logistic_regression",
-            {
-                "penalty": ["l1", "l2"],
-                "solver": ["liblinear"],
-                "C": [100, 10, 1.0, 0.1, 0.01]
-            },
-        ),
-        (
-            KNeighborsClassifier,
-            "k-nearest_neighbors",
-            {
-                "n_neighbors": [5, 7, 11, 15, 21],
-                "metric": ["euclidean", "manhattan", "minkowski"],
-                "weights": ["uniform", "distance"]
-            }
-        )
+        # (
+        #     LogisticRegression,
+        #     "logistic_regression",
+        #     {
+        #         "penalty": ["l1", "l2"],
+        #         "solver": ["liblinear"],
+        #         "C": [100, 10, 1.0, 0.1, 0.01]
+        #     },
+        # ),
+        # (
+        #     KNeighborsClassifier,
+        #     "k-nearest_neighbors",
+        #     {
+        #         "n_neighbors": [5, 7, 11, 15, 21],
+        #         "metric": ["euclidean", "manhattan", "minkowski"],
+        #     }
+        # )
 
     ]
     return models
@@ -66,20 +64,18 @@ def run_models_validation(x, y, models, number_of_parameters_combinations, numbe
         )
         with open(f"../pickle/best_{classifier_name}_classifier", "wb") as fp:
             pickle.dump(results.classifier[0], fp)
+
+        results.drop(columns=["classifier"], inplace=True)
     
-        results[["tuned_parameters",
-                 "tunning_mean_score",
-                 "tunning_std_score",
-                 "validation_score"]]\
-            .to_csv(f"../data/results/{classifier_name}/validation.csv")
+        results.to_csv(f"../data/results/{classifier_name}/validation.csv")
 
 
 def main():
     df = pd.read_csv("../data/winequality-red.csv", sep=";")
     x, y = preprocessing_data(df)
     models = get_models()
-    number_of_parameters_combinations = 10
-    number_of_folds = 15
+    number_of_parameters_combinations = 15
+    number_of_folds = 30
     run_models_validation(x, y, models, number_of_parameters_combinations, number_of_folds)
 
 

@@ -102,19 +102,24 @@ def run_cross_validation(
             values=(x_train_validation, y_train_validation)
         )
         tunning_results.to_csv(f"../data/results/{classifier_name}/tunning/fold_{index_fold}.csv")
-        print(f"classifier: {classifier_name}\nbest parameters: {best_parameters}")
 
         cls = classifier(**best_parameters)
         cls.fit(x_train_validation, y_train_validation)
-        predictions = cls.predict(x_test_validation)
-        confusion_matrix = get_confusion_matrix(y_test_validation, predictions)
-        validation_score = get_f1_score(confusion_matrix.values)
+
+        train_predictions = cls.predict(x_train_validation)
+        train_confusion_matrix = get_confusion_matrix(y_train_validation, train_predictions)
+        train_score = get_f1_score(train_confusion_matrix.values)
+
+        validation_predictions = cls.predict(x_test_validation)
+        validation_confusion_matrix = get_confusion_matrix(y_test_validation, validation_predictions)
+        validation_score = get_f1_score(validation_confusion_matrix.values)
         results.append(
             {
                 "classifier": cls,
                 "tuned_parameters": str(best_parameters),
                 "tunning_mean_score": tunning_results.values[0][3],
                 "tunning_std_score": tunning_results.values[0][4],
+                "train_score": train_score,
                 "validation_score": validation_score
             }
         )

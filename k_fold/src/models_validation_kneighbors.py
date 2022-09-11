@@ -24,8 +24,7 @@ def get_models() -> list[tuple[Any, str, dict[str, Any]]]:
             "k-nearest_neighbors",
             {
                 "n_neighbors": [5, 7, 11, 15, 21],
-                "metric": ["euclidean", "manhattan", "minkowski"],
-                "weights": ["uniform", "distance"]
+                "metric": ["euclidean", "manhattan", "minkowski"]
             }
         )
 
@@ -48,20 +47,18 @@ def run_models_validation(x, y, models, number_of_parameters_combinations, numbe
         )
         with open(f"../pickle/best_{classifier_name}_classifier", "wb") as fp:
             pickle.dump(results.classifier[0], fp)
-    
-        results[["tuned_parameters",
-                 "tunning_mean_score",
-                 "tunning_std_score",
-                 "validation_score"]]\
-            .to_csv(f"../data/results/{classifier_name}/validation.csv")
+
+        results.drop(columns=["classifier"], inplace=True)
+
+        results.to_csv(f"../data/results/{classifier_name}/validation.csv")
 
 
 def main():
     df = pd.read_csv("../data/winequality-red.csv", sep=";")
     x, y = preprocessing_data(df)
     models = get_models()
-    number_of_parameters_combinations = 10
-    number_of_folds = 15
+    number_of_parameters_combinations = 15
+    number_of_folds = 30
     run_models_validation(x, y, models, number_of_parameters_combinations, number_of_folds)
 
 
