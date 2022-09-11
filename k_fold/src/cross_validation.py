@@ -1,7 +1,5 @@
-import os
-import sys
 import random
-from typing import Any, List, Dict
+from typing import Any
 from time import time
 import pickle
 import logging
@@ -10,14 +8,12 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, f1_score
 
-from Kfold.kfold import Kfold
-
-
-logger = logging.getLogger()
-logger.setLevel("DEBUG")
+from kfold import Kfold
+from metrics import (
+    get_confusion_matrix,
+    get_f1_score
+)
 
 
 def get_random_combinations_of_parameters(
@@ -62,19 +58,19 @@ def get_best_parameters(
             final_time = time()
             times.append(final_time - initial_time)
             predictions = cls.predict(x_test_tunning)
-            score = f1_score(y_test_tunning, predictions)
+            confusion_matrix = get_confusion_matrix(y_test_tunning, predictions)
+            score = get_f1_score(confusion_matrix.values)
             scores.append(score)
         mean_time = np.asarray(times).mean()
         scores = np.asarray(scores)
         mean_score = scores.mean()
         std_score = scores.std()
         grid_results.append(
-            dict(combination, f1_mean_score=mean_score, f1_score_std=std_score, mean_time=mean_time)
+            dict(combination, f1_mean_score=mean_score, f1_std_score=std_score, mean_time=mean_time)
         )
-    grid_results = pd.DataFrame(grid_results).sort_values(
-        by=["f1_mean_score"],
-        ascending=False
-    ).reset_index(drop=True)
+    grid_results = pd.DataFrame(grid_results).\
+        sort_values(by=["f1_mean_score"], ascending=False).\
+        reset_index(drop=True)
 
     best_parameters = grid_results.iloc[:, :-3].to_dict("records")[0]
 
@@ -91,7 +87,6 @@ def run_cross_validation(
 ) -> pd.DataFrame:
     validation_kfold = Kfold(k=numbers_of_folds)
     X, y = values
-    scores = []
     results = []
     for index_fold, (
             x_train_validation,
@@ -99,8 +94,6 @@ def run_cross_validation(
             y_train_validation,
             y_test_validation
     ) in enumerate(validation_kfold.split(X, y)):
-        logger.info(f"fold: {index_fold}")
-        print(f"fold: {index_fold}")
         best_parameters, tunning_results = get_best_parameters(
             classifier=classifier,
             parameters_grid=parameters_grid,
@@ -114,49 +107,18 @@ def run_cross_validation(
         cls = classifier(**best_parameters)
         cls.fit(x_train_validation, y_train_validation)
         predictions = cls.predict(x_test_validation)
-        score = f1_score(y_test_validation, predictions)
-        scores.append(score)
-    mean_score = np.asarray(scores).mean()
-    results.append(
-        {
-            "classifier": cls,
-            "tuned_parameters": str(best_parameters),
-            "mean_score": mean_score
-        }
-    )
+        confusion_matrix = get_confusion_matrix(y_test_validation, predictions)
+        validation_score = get_f1_score(confusion_matrix.values)
+        results.append(
+            {
+                "classifier": cls,
+                "tuned_parameters": str(best_parameters),
+                "tunning_mean_score": tunning_results.values[0][3],
+                "tunning_std_score": tunning_results.values[0][4],
+                "validation_score": validation_score
+            }
+        )
 
-    return pd.DataFrame(scores).sort_values(by="score", ascending=False).reset_index(drop=True)
-
-
-def main():
-    df = pd.read_csv("../data/winequality-red.csv", sep=";")
-    y = df.quality.apply(lambda quality: 0 if quality <= 5 else 1).to_numpy()
-    X = MinMaxScaler().fit_transform(df.iloc[:, :-1])
-    number_of_parameters_combinations = 10
-    number_of_folds = 15
-
-    classifier = RandomForestClassifier
-    classifier_name = "random_forest"
-    parameters_grid = {
-        "n_estimators": [50, 100, 200, 300, 500],
-        "criterion": ["gini", "entropy", "log_loss"],
-        "max_features": ["sqrt", "log2", 0.2, None]
-    }
-
-    results = run_cross_validation(
-        classifier=classifier,
-        classifier_name=classifier_name,
-        parameters_grid=parameters_grid,
-        number_of_parameters_combinations=number_of_parameters_combinations,
-        numbers_of_folds=number_of_folds,
-        values=(X, y)
-    )
-    with open("../pickle/best_random_forest_classifier", "wb") as fp:
-        pickle.dump(results.classifier[0], fp)
-
-    results[["tuned_parameters",
-             "score"]].to_csv(f"../data/results/{classifier_name}/validation.csv")
-
-
-if __name__ == "__main__":
-    main()
+    return pd.DataFrame(results).\
+        sort_values(by="validation_score", ascending=False).\
+        reset_index(drop=True)

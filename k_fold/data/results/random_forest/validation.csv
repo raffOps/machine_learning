@@ -1,16 +1,16 @@
-,tuned_parameters,score
-0,"{""{'n_estimators': 100, 'criterion': 'log_loss', 'max_features': 0.2}""}",0.8958333333333333
-1,"{""{'n_estimators': 100, 'criterion': 'gini', 'max_features': 'log2'}""}",0.8631578947368421
-2,"{""{'n_estimators': 50, 'criterion': 'log_loss', 'max_features': 'sqrt'}""}",0.8571428571428571
-3,"{""{'n_estimators': 200, 'criterion': 'log_loss', 'max_features': 'log2'}""}",0.8484848484848485
-4,"{""{'n_estimators': 200, 'criterion': 'gini', 'max_features': 'log2'}""}",0.8453608247422681
-5,"{""{'n_estimators': 300, 'criterion': 'log_loss', 'max_features': None}""}",0.836734693877551
-6,"{""{'n_estimators': 300, 'criterion': 'log_loss', 'max_features': 'sqrt'}""}",0.8349514563106797
-7,"{""{'n_estimators': 500, 'criterion': 'log_loss', 'max_features': 0.2}""}",0.8333333333333334
-8,"{""{'n_estimators': 100, 'criterion': 'gini', 'max_features': 'sqrt'}""}",0.8247422680412372
-9,"{""{'n_estimators': 300, 'criterion': 'log_loss', 'max_features': 0.2}""}",0.8041237113402061
-10,"{""{'n_estimators': 300, 'criterion': 'log_loss', 'max_features': 'sqrt'}""}",0.7912087912087912
-11,"{""{'n_estimators': 500, 'criterion': 'log_loss', 'max_features': 'sqrt'}""}",0.7766990291262137
-12,"{""{'n_estimators': 300, 'criterion': 'entropy', 'max_features': 'log2'}""}",0.7708333333333333
-13,"{""{'n_estimators': 200, 'criterion': 'entropy', 'max_features': 0.2}""}",0.7142857142857142
-14,"{""{'n_estimators': 500, 'criterion': 'entropy', 'max_features': 'log2'}""}",0.6736842105263158
+,tuned_parameters,tunning_mean_score,tunning_std_score,validation_score
+0,"{'n_estimators': 100, 'criterion': 'gini', 'max_features': 'log2'}",0.8089307286825348,0.017873393355645705,0.8842105263157894
+1,"{'n_estimators': 100, 'criterion': 'entropy', 'max_features': 0.2}",0.8112861968240416,0.03883560281411745,0.88
+2,"{'n_estimators': 50, 'criterion': 'log_loss', 'max_features': 'log2'}",0.8097225396433224,0.03036381433159348,0.875
+3,"{'n_estimators': 500, 'criterion': 'gini', 'max_features': 0.2}",0.8117799273914896,0.03316699462710699,0.8541666666666667
+4,"{'n_estimators': 300, 'criterion': 'gini', 'max_features': 0.2}",0.8166777925444889,0.04587122766847432,0.8484848484848485
+5,"{'n_estimators': 300, 'criterion': 'log_loss', 'max_features': 'sqrt'}",0.8246568891333558,0.031077088020719866,0.826923076923077
+6,"{'n_estimators': 300, 'criterion': 'log_loss', 'max_features': None}",0.8217705434322312,0.043952333730315464,0.8247422680412372
+7,"{'n_estimators': 50, 'criterion': 'entropy', 'max_features': 'sqrt'}",0.8238750531788134,0.03519519628072575,0.8210526315789473
+8,"{'n_estimators': 100, 'criterion': 'log_loss', 'max_features': 'sqrt'}",0.8200721524315219,0.03790492691070826,0.8041237113402061
+9,"{'n_estimators': 500, 'criterion': 'log_loss', 'max_features': 'log2'}",0.8224281535802257,0.03339060871432154,0.8037383177570094
+10,"{'n_estimators': 50, 'criterion': 'log_loss', 'max_features': 'sqrt'}",0.815017062255959,0.04492636050512392,0.7912087912087912
+11,"{'n_estimators': 50, 'criterion': 'entropy', 'max_features': 'log2'}",0.8187923826500946,0.029843295209954792,0.7799999999999999
+12,"{'n_estimators': 50, 'criterion': 'log_loss', 'max_features': 'log2'}",0.8147627981318685,0.0304194771108299,0.7708333333333333
+13,"{'n_estimators': 500, 'criterion': 'log_loss', 'max_features': 'sqrt'}",0.8269795662370221,0.03429492835530593,0.7647058823529411
+14,"{'n_estimators': 200, 'criterion': 'entropy', 'max_features': 0.2}",0.8290869034262018,0.05291721767170698,0.7157894736842104

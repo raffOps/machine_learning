@@ -59,15 +59,3 @@ class Kfold:
             y_test = y.take(folds[test_index_fold], axis=0)
 
             yield x_train, x_test, y_train, y_test
-
-
-def main():
-    df = pd.read_csv("../../data/winequality-red.csv",
-                     sep=";")
-    y = df.quality.apply(lambda quality: 0 if quality <= 5 else 1).values
-    X = MinMaxScaler().fit_transform(df.iloc[:, :-1])
-
-    #for x_train, x_test, y_train, y_test
-
-if __name__ == "__main__":
-    main()
