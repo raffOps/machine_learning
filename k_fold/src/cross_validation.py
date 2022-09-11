@@ -1,7 +1,7 @@
 import os
 import sys
 import random
-from typing import Any
+from typing import Any, List, Dict
 from time import time
 import pickle
 import logging
@@ -23,7 +23,7 @@ logger.setLevel("DEBUG")
 def get_random_combinations_of_parameters(
         parameters: dict,
         number_of_combinations: int
-) -> list[int]:
+) -> list[dict[Any, Any]]:
     combinations = []
     for _ in range(number_of_combinations):
         combination = {}
@@ -92,6 +92,7 @@ def run_cross_validation(
     validation_kfold = Kfold(k=numbers_of_folds)
     X, y = values
     scores = []
+    results = []
     for index_fold, (
             x_train_validation,
             x_test_validation,
@@ -114,7 +115,15 @@ def run_cross_validation(
         cls.fit(x_train_validation, y_train_validation)
         predictions = cls.predict(x_test_validation)
         score = f1_score(y_test_validation, predictions)
-        scores.append({"classifier": cls, f"tuned_parameters": {str(best_parameters)},   "score": score})
+        scores.append(score)
+    mean_score = np.asarray(scores).mean()
+    results.append(
+        {
+            "classifier": cls,
+            "tuned_parameters": str(best_parameters),
+            "mean_score": mean_score
+        }
+    )
 
     return pd.DataFrame(scores).sort_values(by="score", ascending=False).reset_index(drop=True)
 
@@ -124,7 +133,7 @@ def main():
     y = df.quality.apply(lambda quality: 0 if quality <= 5 else 1).to_numpy()
     X = MinMaxScaler().fit_transform(df.iloc[:, :-1])
     number_of_parameters_combinations = 10
-    number_of_folds = 10
+    number_of_folds = 15
 
     classifier = RandomForestClassifier
     classifier_name = "random_forest"
