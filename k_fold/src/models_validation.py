@@ -27,23 +27,23 @@ def get_models() -> list[tuple[Any, str, dict[str, Any]]]:
                 "criterion": ["gini", "entropy", "log_loss"],
             }
         ),
-        # (
-        #     LogisticRegression,
-        #     "logistic_regression",
-        #     {
-        #         "penalty": ["l1", "l2"],
-        #         "solver": ["liblinear"],
-        #         "C": [100, 10, 1.0, 0.1, 0.01]
-        #     },
-        # ),
-        # (
-        #     KNeighborsClassifier,
-        #     "k-nearest_neighbors",
-        #     {
-        #         "n_neighbors": [5, 7, 11, 15, 21],
-        #         "metric": ["euclidean", "manhattan", "minkowski"],
-        #     }
-        # )
+        (
+            LogisticRegression,
+            "logistic_regression",
+            {
+                "penalty": ["l1", "l2"],
+                "solver": ["liblinear"],
+                "C": [100, 10, 1.0, 0.1, 0.01]
+            },
+        ),
+        (
+            KNeighborsClassifier,
+            "k-nearest_neighbors",
+            {
+                "n_neighbors": [5, 7, 11, 15, 21],
+                "metric": ["euclidean", "manhattan", "minkowski"],
+            }
+        )
 
     ]
     return models
