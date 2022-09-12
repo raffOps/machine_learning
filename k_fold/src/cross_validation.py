@@ -12,6 +12,9 @@ from sklearn.preprocessing import MinMaxScaler
 from kfold import Kfold
 from metrics import (
     get_confusion_matrix,
+    get_accuracy_score,
+    get_precision_score,
+    get_recall_score,
     get_f1_score
 )
 
@@ -107,23 +110,38 @@ def run_cross_validation(
         cls.fit(x_train_validation, y_train_validation)
 
         train_predictions = cls.predict(x_train_validation)
-        train_confusion_matrix = get_confusion_matrix(y_train_validation, train_predictions)
-        train_score = get_f1_score(train_confusion_matrix.values)
+        train_confusion_matrix = get_confusion_matrix(y_train_validation, train_predictions).values
+        
+        train_accuracy = get_accuracy_score(train_confusion_matrix)
+        train_precision = get_precision_score(train_confusion_matrix)
+        train_recall = get_recall_score(train_confusion_matrix)
+        train_f1_score = get_f1_score(train_confusion_matrix)
 
         validation_predictions = cls.predict(x_test_validation)
-        validation_confusion_matrix = get_confusion_matrix(y_test_validation, validation_predictions)
-        validation_score = get_f1_score(validation_confusion_matrix.values)
+        validation_confusion_matrix = get_confusion_matrix(y_test_validation, validation_predictions).values
+        validation_accuracy = get_accuracy_score(validation_confusion_matrix)
+        validation_precision = get_precision_score(validation_confusion_matrix)
+        validation_recall = get_recall_score(validation_confusion_matrix)
+        validation_f1_score = get_f1_score(validation_confusion_matrix)
+        
         results.append(
             {
                 "classifier": cls,
                 "tuned_parameters": str(best_parameters),
                 "tunning_mean_score": tunning_results.values[0][3],
                 "tunning_std_score": tunning_results.values[0][4],
-                "train_score": train_score,
-                "validation_score": validation_score
+                "train_accuracy": train_accuracy,
+                "train_precision": train_precision,
+                "train_recall": train_recall,
+                "train_f1_score": train_f1_score,
+                
+                "validation_accuracy": validation_accuracy,
+                "validation_precision": validation_precision,
+                "validation_recall": validation_recall,
+                "validation_f1_score": validation_f1_score
             }
         )
 
     return pd.DataFrame(results).\
-        sort_values(by="validation_score", ascending=False).\
+        sort_values(by="validation_f1_score", ascending=False).\
         reset_index(drop=True)
