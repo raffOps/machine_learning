@@ -3,6 +3,8 @@ import numpy as np
 
 random.seed(42)
 
+BALANCED = False
+
 
 class Kfold:
     def __init__(self, k: int, shuffle=True):
@@ -32,9 +34,11 @@ class Kfold:
         for _ in range(int(len(y_values) / self.k)):
             try:
                 for fold in folds:
-                    index_false_label = indexes_with_false_label.pop(0)
+                    index_false_label_a = indexes_with_false_label.pop(0)
+                    index_false_label_b = indexes_with_false_label.pop(0)
+                    index_false_label_c = indexes_with_false_label.pop(0)
                     index_true_label = indexes_with_true_label.pop(0)
-                    fold.extend([index_false_label, index_true_label])
+                    fold.extend([index_false_label_a, index_false_label_b, index_false_label_c, index_true_label])
             except IndexError:
                 break
 

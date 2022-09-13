@@ -1,5 +1,6 @@
 from typing import Any
 import pickle
+from math import ceil
 
 import numpy as np
 import pandas as pd
@@ -64,13 +65,16 @@ def run_models_validation(x, y, models, number_of_parameters_combinations, numbe
         with open(f"../pickle/best_{classifier_name}_classifier", "wb") as fp:
             pickle.dump(results.classifier[0], fp)
 
+        with open(f"../pickle/median_{classifier_name}_classifier", "wb") as fp:
+            pickle.dump(results.classifier[ceil(number_of_folds/2)], fp)
+
         results.drop(columns=["classifier"], inplace=True)
     
         results.to_csv(f"../data/results/{classifier_name}/validation.csv")
 
 
 def main():
-    df = pd.read_csv("../data/winequality-red.csv", sep=";")
+    df = pd.read_csv("../data/winequality-white.csv", sep=";")
     x, y = preprocessing_data(df)
     models = get_models()
     number_of_parameters_combinations = 15
