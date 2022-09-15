@@ -5,7 +5,8 @@
 Clone o [repositório](https://github.com/rjribeiro/machine_learning)
 e mude para pasta kfold
 
-```git clone https://github.com/rjribeiro/machine_learning.git && cd kfold```
+```git clone https://github.com/rjribeiro/machine_learning.git && cd 
+k_fold```
 
 
 ## Configuração do ambiente
