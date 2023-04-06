@@ -40,8 +40,5 @@ def get_matching_distance(X1: np.ndarray, x2: np.ndarray) -> np.ndarray[Any, np.
 def get_distance_matrix(X1: np.ndarray,
                         X2: np.ndarray,
                         distance_function: Callable = get_euclidean_distance) -> pd.DataFrame:
-    distance_matrix = []
-    for x2 in X2:
-        distance_matrix.append(distance_function(X1, x2))
-
+    distance_matrix = [distance_function(X1, x2) for x2 in X2]
     return pd.DataFrame(distance_matrix).transpose()

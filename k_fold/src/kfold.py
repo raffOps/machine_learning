@@ -17,12 +17,15 @@ class Kfold:
         for index_fold_test in range(self.k):
             folds_for_training = []
             splits.append((folds_for_training, index_fold_test))
-            for index_fold_train in range(self.k):
-                if index_fold_train != index_fold_test:
-                    folds_for_training.append(index_fold_train)
-    
-        splits = set((tuple(folds_for_training), fold_for_test) for folds_for_training, fold_for_test in splits)
-        return splits
+            folds_for_training.extend(
+                index_fold_train
+                for index_fold_train in range(self.k)
+                if index_fold_train != index_fold_test
+            )
+        return {
+            (tuple(folds_for_training), fold_for_test)
+            for folds_for_training, fold_for_test in splits
+        }
     
     def generate_folds(self, y_values: np.ndarray) -> list[tuple[int]]:
         indexes_with_false_label = [index for index, value in enumerate(y_values) if value == 0]

@@ -19,14 +19,14 @@ def preprocessing_data(df: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
 
 
 def get_models() -> list[tuple[Any, str, dict[str, Any]]]:
-    models = [
+    return [
         (
             KNeighborsClassifier,
             "k-nearest_neighbors",
             {
                 "n_neighbors": [5, 7, 11, 15, 21],
                 "metric": ["euclidean", "manhattan", "minkowski"],
-            }
+            },
         ),
         (
             RandomForestClassifier,
@@ -34,7 +34,7 @@ def get_models() -> list[tuple[Any, str, dict[str, Any]]]:
             {
                 "n_estimators": [50, 100, 200, 300],
                 "criterion": ["gini", "entropy", "log_loss"],
-            }
+            },
         ),
         (
             LogisticRegression,
@@ -42,11 +42,10 @@ def get_models() -> list[tuple[Any, str, dict[str, Any]]]:
             {
                 "penalty": ["l1", "l2"],
                 "solver": ["liblinear"],
-                "C": [100, 10, 1.0, 0.1, 0.01]
+                "C": [100, 10, 1.0, 0.1, 0.01],
             },
-        )
+        ),
     ]
-    return models
 
 
 def run_models_validation(x, y, models, number_of_parameters_combinations, number_of_folds):

@@ -23,9 +23,10 @@ def get_random_combinations_of_parameters(
 ) -> list[dict[Any, Any]]:
     combinations = []
     for _ in range(number_of_combinations):
-        combination = {}
-        for parameter, values in parameters.items():
-            combination[parameter] = random.choice(values)
+        combination = {
+            parameter: random.choice(values)
+            for parameter, values in parameters.items()
+        }
         combinations.append(combination)
     return combinations
 
